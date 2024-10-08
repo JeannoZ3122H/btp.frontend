@@ -1,0 +1,145 @@
+
+<mat-toolbar class="mat-elevation-z8 default__toolbar">
+    @if(screenWidth <= 1214){
+        <a class="" routerLink="/">
+            <img style="cursor: pointer;" src="favicon.ico" width="135" class="user-log" alt="logo">
+        </a>
+        <span class="default__spacer"></span>
+        
+        <button [matTooltip]="is_show?'Cliquez pour fermer le menu':'Cliquez pour ouvrir le menu'"
+        (click)="drawer.toggle(); is_show =! is_show" mat-mini-fab color="default" class="ms-lg-5 ms-3 border-2 border-danger">
+            <mat-icon color="primary" class="mat-icon-navbar text-yellow">menu</mat-icon>
+        </button>
+    }@else{
+        <div class="header header-transparent pt-2 change-logo">
+            <div class="container-fluid">
+                <nav id="navigation" class="navigation navigation-landscape">
+                    <div class="nav-header">
+                        <a class="nav-brand static-logo" routerLink="/"><img src="favicon.ico" class="logo" alt=""></a>
+                        <a class="nav-brand fixed-logo" routerLink="/"><img src="favicon.ico" class="logo" alt=""></a>
+                        <div class="nav-toggle"></div>
+                        <div class="mobile_nav">
+                            <ul>
+                                <li>
+                                    <a href="JavaScript:Void(0);" data-bs-toggle="modal" data-bs-target="#login" class="btn btn-info"><i class="fas fa-sign-in-alt me-2"></i>Log In</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="nav-menus-wrapper" style="transition-property: none;">
+                        <ul class="nav-menu">
+                            @for (navbar_item of sidebar_menu_news_list; track $index) {
+                                <li class="custumer__dropdown">
+                                    @if(navbar_item.nav_list){
+                                        <a role="button" #t="matMenuTrigger" style="font-size: 13px !important" (click)="showSubMenu(navbar_item)" [matMenuTriggerFor]="menu" class="d-flex text-uppercase">
+                                            {{ navbar_item.nav_item }}
+                                            <i [class]="this_nav_item == navbar_item.id?'d-none':'icofont-curved-right'"></i>
+                                            <i [class]="this_nav_item == navbar_item.id?'icofont-curved-down':'d-none'"></i>
+                                        </a>
+                                        <mat-menu class="" #menu="matMenu">
+                                            <ul id="dropdown" class="card mb-0 p-1">
+                                                @for (item of navbar_item.nav_list; track $index) {
+                                                    <li class="px-3 py-1" style="cursor: pointer;" [routerLink]="item.route" routerLinkActive="active"
+                                                    [routerLinkActiveOptions]="{exact: false}">
+                                                        <a style="font-size: 13px !important">{{ item.nav_list_item }}</a>
+                                                    </li>
+                                                }
+                                            </ul>
+                                        </mat-menu>
+                                    }@else{
+                                        <a class="text-uppercase" style="cursor: pointer;" style="font-size: 13px !important" routerLinkActive="active"
+                                        [routerLinkActiveOptions]="{exact: false}"
+                                         [routerLink]="navbar_item.route">
+                                            {{ navbar_item.nav_item }}<span class="submenu-indicator"></span>
+                                        </a>
+                                    }
+                                </li>
+                            }
+                        </ul>
+        
+                        <ul class="align-to-right ps-1">
+                            <li class="ms-2 d-inline-block">
+                                <a mat-raised-button [routerLink]="['/web.information-pratiques', 'INFO-04', 'faq']"
+                                 style="background: #102a6f" class="bg-primary text-white">
+                                    <i class="fa-solid me-2 text-white fa-magnifying-glass"></i>
+                                    Trouvez vos réponses
+                                </a>
+                                <a mat-raised-button [routerLink]="['/web.contact']"
+                                 style="background: #102a6f" class="bg-primary text-white ms-2">
+                                    <i class="fa-solid me-2 text-white fa-pen-nib"></i>
+                                    Nous saisir
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </nav>
+            </div>
+        </div>
+        <div class="clearfix"></div>        
+    }
+</mat-toolbar>
+
+<mat-drawer-container class="default__drawer__conrainer">
+    <mat-drawer [class]="screenWidth <= 1214?'default__drawer':'d-none'"
+    style="height: max-content !important; background-color: #fff; width: 100%" #drawer
+    [mode]="'over'">
+        
+        <mat-nav-list class="mt-4 d-flex flex-wrap">
+            <mat-divider mat-inset></mat-divider>
+            @for (nav_item of sidebar_menu_news_list; track $index) {
+                @if(nav_item.nav_list){
+                    <div class="ps-0">
+                        <mat-list-item class="fw-bolder p-1 nav__item__icon">
+                            <button #t="matMenuTrigger" [matMenuTriggerFor]="menu" (click)="showSubMenu(nav_item)"
+                            [class]="t.menuOpen?'mat__extended__btn__custumer active mx-2':'mat__extended__btn__custumer mx-1'"
+                            mat-button>
+                                <mat-icon [class]="this_nav_item == nav_item.id?'d-none':''">chevron_right</mat-icon>
+                                <mat-icon [class]="this_nav_item == nav_item.id?'':'d-none'">keyboard_arrow_down</mat-icon>
+                                <span class="text-start">{{ nav_item.nav_item}}</span>
+                            </button>
+                        </mat-list-item>
+                        <mat-menu class="mt-2 " #menu="matMenu">
+                            @for (nav_list_item of nav_item.nav_list; track $index) {
+                                <button mat-menu-item style="cursor: pointer;" class="mat__extended__btn__custumer" [routerLink]="nav_list_item.route"
+                                routerLinkActive="active" [routerLinkActiveOptions]="nav_item.id == 1?{exact: true}:{exact: false}"
+                                >{{ nav_list_item.nav_list_item }}</button>
+                            }
+                        </mat-menu>
+                    </div>
+                }@else {
+                    <div class="ps-0">
+                        <mat-list-item class="fw-bolder ps-3 nav__item__icon">
+                            <button class="w-100 py-2 mat__extended__btn__custumer mat-elevation-z8" [routerLink]="nav_item.route"
+                                routerLinkActive="active" [routerLinkActiveOptions]="nav_item.id == 1?{exact: true}:{exact: false}" mat-button>
+                                <span class="text-start">{{ nav_item.nav_item }}</span>
+                            </button>
+                        </mat-list-item>
+                    </div>
+                }
+            }
+            <div class="d-md-none d-flex">
+                <mat-list-item class="fw-bolder p-1 nav__item__icon">
+
+                    <button [routerLink]="['/web.caci.contact']"
+                        class="mx-1" mat-raised-button color="accent">Nous saisir</button>
+
+                    <button [routerLink]="['/web.caci.faire-une-demande']"
+                        class="mx-1" mat-raised-button color="accent">Faire une demande</button>
+
+                </mat-list-item>
+            </div>
+        </mat-nav-list>
+    </mat-drawer>
+
+    <mat-drawer-content class="default__content pt-5">
+        <div class="mt-lg-3 mt-2" style="overflow-x: hidden;">
+            <router-outlet/>
+            
+            <div class="mat__content__toggle">
+                <button (click)="onActivate($event)" mat-mini-fab color="default">
+                    <mat-icon>arrow_upward</mat-icon>
+                </button>
+            </div>
+        </div>
+    </mat-drawer-content>
+</mat-drawer-container>
