@@ -45,6 +45,10 @@ export const appConfig: ApplicationConfig = {
                 scrollPositionRestoration: 'enabled', // Restaure la position de défilement
                 anchorScrolling: 'enabled', // Active le défilement par ancre
             }),
-        ), provideAnimationsAsync(),
+        ), 
+        provideAnimationsAsync(), provideAnimationsAsync(), provideServiceWorker('ngsw-worker.js', {
+            enabled: !isDevMode(),
+            registrationStrategy: 'registerWhenStable:30000'
+          }),
     ]
 };
